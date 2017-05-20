@@ -18,3 +18,4 @@ Description of Contents:
 - ###### Stand alone Python script that will get data from the OSM file and outout it to JSON
 - ###### Gives file size of JSON file created
 - ###### Shows preview of the shape created for three records
+- ###### Analyzes data in MongoDB
