@@ -1,7 +1,7 @@
 # Data Wrangling with MongoDB
-### P3: 	 	Wrangle OpenStreetMap Data
-### Student: 	WhitneyKing
-### Program: 	Udacity Data Analyst Nano Degree
+#### P3: 	 	Wrangle OpenStreetMap Data
+##### Student: 	WhitneyKing
+##### Program: 	Udacity Data Analyst Nano Degree
 
 
 Contents can be accessed on GitHub:  https://github.com/WhitneyOnTheWeb/Seattle_OSM_MongoDB
