@@ -9,7 +9,7 @@ Contents can be accessed on GitHub:  https://github.com/WhitneyOnTheWeb/Seattle_
 Description of Contents:
 1. OSMWrangle_GreatSeattle.ipynb
 ..* Jupyter Notebook where Case Study and P3 work was conducted
-* Contains scripts, notes, and findings
+..* Contains scripts, notes, and findings
 2. seattle_small_sample.osm
 ..* Small sample of the data used for analysis in OSM XML format
 3. seattle_small_sample.json
