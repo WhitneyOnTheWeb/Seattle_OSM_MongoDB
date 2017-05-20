@@ -11,13 +11,14 @@ import ast
 
 # OSM Files
 OSM_NAME = "seattle_washington.osm"
-OSM_FILE = open(OSM_NAME, "rb")
+#OSM_FILE = open(OSM_NAME, "rb")
 
+PATH = 'C:\JupyterNotebook\MongoDB\\'  ###CHANGE THIS TO LOCAL DIRECTORY FOR OSM FILE###
 SAMPLE_NAME = "seattle_sample.osm"  # k = 30
-SAMPLE_FILE = open(SAMPLE_NAME, "rb")
+SAMPLE_FILE = open(PATH + SAMPLE_NAME, "rb")
 
 SMALL_SAMPLE_NAME = "seattle_small_sample.osm"  # k = 900
-SMALL_SAMPLE_FILE = open(SMALL_SAMPLE_NAME, "rb")
+SMALL_SAMPLE_FILE = open(PATH + SMALL_SAMPLE_NAME, "rb")
 
 # Street Types in Addresses
 st_types = defaultdict(set)
@@ -40,11 +41,88 @@ street_types = defaultdict(set)
 expected_street_types = ["Street", "Avenue", "Boulevard", "Drive", "Court", "Place", "Square", "Lane", "Road", 
             "Trail", "Parkway", "Commons"]
 
+			
+mapping = { "St": "Street",
+            "St.": "Street",
+            'AVE': 'Avenue',
+            'Ave': 'Avenue',
+            'Ave.': 'Avenue',
+            'Av.': 'Avenue',
+            'ave': 'Avenue',
+            'Blvd': 'Boulevard',
+            'Blvd.': 'Boulevard',
+            'boulevard': 'Boulevard',
+            'CT': 'Court',
+            'Ct': 'Court',
+            'Dr': 'Drive',
+            'Dr.': 'Drive',
+            'E': 'East',
+            'E.Division': 'East Division',
+            'FI': 'Fox Drive',
+            'Hwy': 'Highway',
+            'K10': 'NE 8th Street',
+            'MainStreet': 'N Main Street',
+            'N': 'North',
+            'NE': 'Northeast',
+            'NW': 'Northwest',
+            'nw': 'Northwest',
+            'PL': 'Place',
+            'Pl': 'Place',
+            'Rd': 'Road',
+            'RD': 'Road',
+            'Rd.': 'Road',
+            'S': 'South',
+            'S.': 'South',
+            'S.E.': 'Southeast',
+            'SE': 'Southeast',
+            'ST': 'Street',
+            'SW': 'Southwest',
+            'SW,': 'Southwest',
+            'Se': 'Southeast',
+            'southeast': 'Southeast',
+            'St': 'Street',
+            'st': 'Street',
+            'street': 'Street',
+            'St.': 'Street',
+            'Ter': 'Terrace',
+            'W': 'West',
+            'west': 'West',
+            'WA': '17625 140th Avenue Southeast',
+            'WA)': 'US 101',
+            'WY': 'Way'
+            }
+			
 
 '''
     Reference:  Udacity
 '''
 tiger = {}
+
+def file_size(SMALL_SAMPLE_NAME):
+    """
+    this function will return the file size
+    
+    Reference:
+    http://stackoverflow.com/questions/2104080/how-to-check-file-size-in-python
+    """
+    file_info = os.stat(PATH + SMALL_SAMPLE_NAME)
+    size = convert_bytes(file_info.st_size)
+    return size
+	
+	
+def convert_bytes(num):
+    """
+    this function will convert bytes to MB.... GB... etc
+    
+    Reference:
+    http://stackoverflow.com/questions/2104080/how-to-check-file-size-in-python
+    """
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if num < 1024.0:
+            size = "%3.1f %s" % (num, x)
+            return size
+        num /= 1024.0
+		
 
 def tag_attributes(f):
     attribs = []
@@ -185,10 +263,10 @@ def process_map(file_in, pretty = False):
     return data
 
 def shape_data():
-    file_name = SAMPLE_NAME.split('.')
+    file_name = SMALL_SAMPLE_NAME.split('.')
     json_file = file_name[0] + ".json"
     
-    data = process_map(file_name[0], False)
+    data = process_map(PATH + file_name[0], False)
     
     print(json_file, 'created:')
     print('File size: ', file_size(json_file))
