@@ -7,6 +7,7 @@ import pprint
 import re
 import codecs
 import json
+import ast
 
 # OSM Files
 OSM_NAME = "seattle_washington.osm"
