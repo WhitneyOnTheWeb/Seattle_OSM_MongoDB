@@ -14,6 +14,8 @@ Description of Contents:
 - ###### Small sample of the data used for analysis in OSM XML format
 3. ##### seattle_small_sample.json
 - ###### Small sample of the data that was cleaned up and output to JSON
+4. ##### CreateSample.py
+- ###### Gets a sample of the original OSM data, in OSM format
 4. ##### CleanData.py
 - ###### Stand alone Python script that will get data from the OSM file and output it to JSON
 - ###### Gives file size of JSON file created
