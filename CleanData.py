@@ -8,6 +8,7 @@ import re
 import codecs
 import json
 import ast
+from pymongo import MongoClient
 
 # OSM Files
 OSM_NAME = "seattle_washington.osm"
@@ -262,10 +263,10 @@ def process_map(file_in, pretty = False):
 
     return data
 
-def shape_data():
-    file_name = SMALL_SAMPLE_NAME.split('.')
-    json_file = file_name[0] + ".json"
-    
+file_name = SMALL_SAMPLE_NAME.split('.')
+json_file = file_name[0] + ".json"
+	
+def shape_data():  
     data = process_map(PATH + file_name[0], False)
     
     print(json_file, 'created:')
@@ -277,3 +278,74 @@ def shape_data():
     pprint.pprint(data[-1])
     
 shape_data()
+
+#Insert Data into MongoDB
+data = process_map(file_name[0], False)
+client = MongoClient()
+db = client.SeattleOSM
+collection = db.Sample
+collection.insert_many(data)
+
+json_file = file_name[0] + ".json"
+
+#Original XML Sample File Size
+print('XML File: ', str(os.path.getsize(PATH + SMALL_SAMPLE_NAME)/1024/1024), 'Mb')
+
+#JSON File Size
+print('JSON File: ', str(os.path.getsize(PATH + json_file)/1024/1024), 'Mb')
+
+#Count nodes and ways
+print('Number of nodes:', collection.find({"type":"node"}).count())
+print('Number of ways:  ', collection.find({"type":"way"}).count())
+print('Total entries:  ', collection.count())
+
+#Count Unique Contributors
+print('Unique Contributors: ', len(db.Sample.distinct("created.uid")))
+
+#Top 10 Contributors
+pl = [{"$group":{"_id": "$created.user",
+                 "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+            {"$limit": 10}]
+result = list(collection.aggregate(pl))
+print('Top 10 User Contributors: ')
+pprint.pprint(result)
+
+#Count Non-Null Attributes
+fields = ['id',
+     'name',
+     'amenity',
+     'building',
+     'shop',
+     'phone',
+     'pos']
+
+for field in fields: #Iterates through basic field values to count non-null occurances of each
+    print(field + ':', db.Sample.find({field:{"$ne": None}}).count())
+	
+#Types of Buildings
+pl = [{"$group":{"_id": "$building",
+                 "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}]
+result = list(collection.aggregate(pl))
+print('Counts of Building Types: ')
+pprint.pprint(result)
+
+#Types of Shops
+pl = [{"$group":{"_id": "$shop",
+                 "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}]
+result = list(collection.aggregate(pl))
+print('Counts of Shop Types: ')
+pprint.pprint(result)
+
+#Popular Cuisines
+pl = [{"$match": {"amenity":"restaurant", 
+                  "cuisine": {"$ne":None}}}, 
+            {"$group":{"_id":"$cuisine", 
+                       "count":{"$sum":1}}},        
+            {"$sort":{"count":-1}}, 
+            {"$limit":10}]
+result = list(collection.aggregate(pl))
+print('Most Popular Types of Food: ')
+pprint.pprint(result)
