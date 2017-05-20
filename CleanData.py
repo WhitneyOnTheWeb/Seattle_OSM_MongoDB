@@ -1,5 +1,5 @@
 # Python Modules
-import xml.etree.cElementTree as ET
+import xml.etree.cElementTree as xET
 from collections import defaultdict
 import csv
 import os
