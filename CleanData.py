@@ -216,8 +216,9 @@ def shape_element(element):
                     if el[1] == 'street':
                         clean_street = update_name(a.attrib['v'], mapping) #Clean Street Types
                         node['address'][el[1]] = clean_street
-					elif el[1] == 'postcode':
+					elif el[1] == 'postcode':	# Clean zipcodes
                         cleanzip = update_zip(a.attrib['v'])
+						node['address'][el[1]] = cleanzip
                     else:
                         node['address'][el[1]] = a.attrib['v'] # Add other address parts
                 elif k.startswith('tiger:'):      # Get TIGER address info
