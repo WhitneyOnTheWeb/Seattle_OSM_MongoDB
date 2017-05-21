@@ -216,6 +216,8 @@ def shape_element(element):
                     if el[1] == 'street':
                         clean_street = update_name(a.attrib['v'], mapping) #Clean Street Types
                         node['address'][el[1]] = clean_street
+					elif el[1] == 'postcode':
+                        cleanzip = update_zip(a.attrib['v'])
                     else:
                         node['address'][el[1]] = a.attrib['v'] # Add other address parts
                 elif k.startswith('tiger:'):      # Get TIGER address info
@@ -235,6 +237,15 @@ def shape_element(element):
     else:
         return None
 
+def update_zip(zipcode):
+    if zipcode == "Olympia, 98501":
+        zipcode = "98501"
+    elif zipcode.startswith('V') or zipcode.startswith('v'):
+            z1 = zipcode[:3]
+            z2 = zipcode[-3:]
+            zipcode = z1 + ' ' + z2
+            zipcode = zipcode.upper()
+    return zipcode
 
 def update_name(name, mapping):
     n = street_type_re.search(name)
